@@ -7,3 +7,6 @@ This is a very __simple__ Sinatra project.
 * `gem install sinatra`
 * `ruby water.rb`
 
+## Try it!
+http://infinite-scrubland-4000.herokuapp.com/
+
