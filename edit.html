@@ -5,9 +5,9 @@
 </head>
 <body>
     <h3>#title</h3>
-    <textarea id='text' spellcheck='false' rows='50' cols='200'>#content</textarea>
+    <textarea id='text' spellcheck='false' rows='50' cols='200' placeholder='Write whole HTML here' autofocus>#content</textarea>
     <br/>
-    <button id='save-btn'>Save</button>
+    <button id='save-btn' accesskey="s">Save</button>
     <script type="text/javascript">
     $(document).on('click', '#save-btn', function() {
         var url = window.location.pathname
