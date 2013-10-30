@@ -10,8 +10,9 @@
     <button id='save-btn'>Save</button>
     <script type="text/javascript">
     $(document).on('click', '#save-btn', function() {
-        $.post('#url', { text: $('#text').val()} ).done(function(){
-            window.location.replace('#url');
+        var url = window.location.pathname
+        $.post(url, { text: $('#text').val()} ).done(function(){
+            window.location.replace(url);
         });
     });
     </script>

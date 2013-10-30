@@ -7,10 +7,10 @@ end
 get "*" do |url|
     html_file_path = url_to_file(url)
     unless File.exists?(html_file_path)
-        File.read("edit.html").sub("#title", "Create me:").sub("#content", "").gsub("#url", url)
+        File.read("edit.html").sub("#title", "Create me:").sub("#content", "")
     else
         if params.has_key?("edit")
-            File.read("edit.html").sub("#title", "Change me:").sub("#content", File.read(html_file_path)).gsub("#url", url)
+            File.read("edit.html").sub("#title", "Change me:").sub("#content", File.read(html_file_path))
         elsif params.has_key?("delete")
             File.read("delete.html").gsub("#url", url)
         else
