@@ -5,13 +5,18 @@
 </head>
 <body>
     <h3>#title</h3>
-    <textarea id='text' spellcheck='false' rows='50' cols='200' placeholder='Write whole HTML here' autofocus>#content</textarea>
+    <textarea id='text' spellcheck='false' rows='50' cols='200' placeholder='Write whole content here' autofocus>#content</textarea>
     <br/>
+    <select id='type'>
+        <option value='html' selected='selected'>HTML</option>
+        <option value='md'>Markdown</option>
+    </select>
     <button id='save-btn' accesskey="s">Save</button>
     <script type="text/javascript">
+    $('#type').val('#&type');
     $(document).on('click', '#save-btn', function() {
         var url = window.location.pathname
-        $.post(url, { text: $('#text').val()} ).done(function(){
+        $.post(url, { type: $('#type').val(), text: $('#text').val()} ).done(function(){
             window.location.replace(url);
         });
     });
