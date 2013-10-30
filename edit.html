@@ -1,11 +1,19 @@
 <!DOCTYPE HTML>
 <html>
+<head>
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+</head>
 <body>
-    <form method='post'>
-        <h3>#title</h3>
-        <textarea spellcheck="false" name='text' rows='50' cols='200'>#content</textarea>
-        <br/>
-        <input type='submit' value='Save'></input>
-    </form>
+    <h3>#title</h3>
+    <textarea id='text' spellcheck='false' rows='50' cols='200'>#content</textarea>
+    <br/>
+    <button id='save-btn'>Save</button>
+    <script type="text/javascript">
+    $(document).on('click', '#save-btn', function() {
+        $.post('#url', { text: $('#text').val()} ).done(function(){
+            window.location.replace('#url');
+        });
+    });
+    </script>
 </body>
 </html>

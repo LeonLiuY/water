@@ -7,10 +7,10 @@ end
 get "*" do |url|
     html_file_path = url_to_file(url)
     unless File.exists?(html_file_path)
-        File.read("edit.html").sub("#title", "Create me:").sub("#content", "")
+        File.read("edit.html").sub("#title", "Create me:").sub("#content", "").gsub("#url", url)
     else
         if params.has_key?("edit")
-            File.read("edit.html").sub("#title", "Change me:").sub("#content", File.read(html_file_path))
+            File.read("edit.html").sub("#title", "Change me:").sub("#content", File.read(html_file_path)).gsub("#url", url)
         elsif params.has_key?("delete")
             File.read("delete.html").gsub("#url", url)
         else
@@ -25,7 +25,7 @@ post "*" do |url|
     File.open(html_file_path, 'w') do |file|
         file.write params[:text]
     end
-    redirect url
+    status 200
 end
 
 delete "*" do |url|
