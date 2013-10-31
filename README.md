@@ -1,10 +1,10 @@
 # Water
 
-This is a very __simple__ Sinatra project.
+This is a very __simple__ [Sinatra](http://www.sinatrarb.com/) project.
 
 ## Setup
 * install ruby gem.
-* `gem install sinatra`
+* `bundle install`
 * `ruby water.rb`
 
 ## Try it!
