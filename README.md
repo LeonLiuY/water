@@ -8,5 +8,5 @@ This is a very __simple__ [Sinatra](http://www.sinatrarb.com/) project.
 * `ruby water.rb`
 
 ## Try it!
-http://infinite-scrubland-4000.herokuapp.com/
+http://wat-ter.herokuapp.com/
 
