@@ -2,7 +2,7 @@ require "sinatra"
 require "rdiscount"
 require "pg"
 
-@@conn = PG.connect(:dbname => "water")
+@@conn = PG.connect(ENV['DB_INFO'])
 @@conn.prepare("find", "select * from link where url = $1")
 @@conn.prepare("save",
     "with new_values (url, type, content) as (values($1, $2, $3)), upsert as (update link l set type = nv.type, content= nv.content from new_values nv where l.url = nv.url returning l.*) insert into link select * from new_values where not exists (select 1 from upsert up where up.url = new_values.url)")
