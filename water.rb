@@ -1,13 +1,22 @@
 require "sinatra"
 require "rdiscount"
-require "pg"
+require 'sinatra/sequel'
 
-@@conn = PG.connect(ENV["DB_INFO"] || "user=postgres dbname=water")
-@@conn.exec("create table if not exists link (url varchar(500), type varchar(100), content text, PRIMARY KEY(url))")
-@@conn.prepare("find", "select * from link where url = $1")
-@@conn.prepare("save",
-    "with new_values (url, type, content) as (values($1, $2, $3)), upsert as (update link l set type = nv.type, content= nv.content from new_values nv where l.url = nv.url returning l.*) insert into link select * from new_values where not exists (select 1 from upsert up where up.url = new_values.url)")
-@@conn.prepare("delete", "delete from link where url = $1")
+set :database, 'postgres://postgres:@localhost/water'
+
+if !database.table_exists?('links')
+    migration "create links table" do
+        database.create_table :links do
+            String :url
+            String :type
+            text :content
+            primary_key [:url]
+        end
+    end
+end
+
+class Link < Sequel::Model
+end
 
 before do
     request.path_info.chomp!("/")
@@ -24,8 +33,8 @@ get %r{/(.+)} do |url|
     else
         if params.has_key?("edit")
             File.read("edit.html").sub("#title", "Change me:")
-            .sub("#content", page['content'])
-            .sub("#&type", page['type'])
+            .sub("#content", page[:content])
+            .sub("#&type", page[:type])
         elsif params.has_key?("delete")
             File.read("delete.html").gsub("#url", url)
         else
@@ -45,27 +54,33 @@ delete %r{/(.+)} do |url|
 end
 
 def get_page(url)
-    result = @@conn.exec_prepared('find', [url])
-    if result.ntuples == 0
-        nil
-    else
-        result[0]
-    end
+    Link[url]
 end
 
 def save_page(url, type, content)
-    @@conn.exec_prepared('save', [url, type, content])
+    link = Link[url]
+    if link.nil?
+        link = Link.new
+        link.url = url
+    end
+    link.type = type
+    link.content = content
+    link.save
 end
 
 def delete_page(url)
-    @@conn.exec_prepared('delete', [url])
+    link = Link[url]
+    unless link.nil?
+        link.delete
+    end
+
 end
 
 def wrap_page(page)
-    case page['type']
+    case page[:type]
     when 'md'
-        markdown page['content']
+        markdown page[:content]
     else
-        page['content']
+        page[:content]
     end
 end
