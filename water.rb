@@ -1,5 +1,6 @@
 require "sinatra"
-require "rdiscount"
+require "redcarpet"
+require "pygmentize"
 require 'sinatra/sequel'
 
 set :database, 'postgres://postgres:@localhost/water'
@@ -79,8 +80,18 @@ end
 def wrap_page(page)
     case page[:type]
     when 'md'
-        markdown page[:content]
+        renderer = PygmentizeHTML
+        extensions = {fenced_code_blocks: true}
+        redcarpet = Redcarpet::Markdown.new(renderer, extensions)
+        File.read("markdown.html").sub("#content", redcarpet.render(page[:content]))
     else
         page[:content]
     end
+end
+
+class PygmentizeHTML < Redcarpet::Render::HTML
+  def block_code(code, language)
+    require 'pygmentize'
+    Pygmentize.process(code, language)
+  end
 end
