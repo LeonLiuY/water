@@ -3,7 +3,7 @@ require "redcarpet"
 require "pygmentize"
 require 'sinatra/sequel'
 
-set :database, 'postgres://postgres:@localhost/water'
+set :database, 'postgres://postgres@localhost/water'
 
 if !database.table_exists?('links')
     migration "create links table" do
